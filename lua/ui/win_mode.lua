@@ -113,7 +113,7 @@ return {
     {
       "beauwilliams/focus.nvim",
       opts = {
-        autoresize = false,
+        autoresize = { enable = false },
         signcolumn = false,
         cursorcolumn = false,
         number = false,

@@ -74,6 +74,7 @@ return {
             refresh = "<C-r>",
             open = "<M-CR>",
           },
+          copilot_node_command = "/home/aaron/.nvm-fish/v20.5.1/bin/node",
         },
         config = function(_, opts)
           require("copilot").setup(opts)
