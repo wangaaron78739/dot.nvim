@@ -1,12 +1,12 @@
 local paranormal_map = function()
   local function paranormal(targets)
-    -- Get the :normal sequence to be executed.
+    -- get the :normal sequence to be executed.
     local input = vim.fn.input "normal! "
     if #input < 1 then return end
 
     local ns = vim.api.nvim_create_namespace ""
 
-    -- Set an extmark as an anchor for each target, so that we can also execute
+    -- set an extmark as an anchor for each target, so that we can also execute
     -- commands that modify the positions of other targets (insert/change/delete).
     for _, target in ipairs(targets) do
       local line, col = unpack(target.pos)
@@ -14,7 +14,7 @@ local paranormal_map = function()
       target.extmark_id = id
     end
 
-    -- Jump to each extmark (anchored to the "moving" targets), and execute the
+    -- jump to each extmark (anchored to the "moving" targets), and execute the
     -- command sequence.
     for _, target in ipairs(targets) do
       local id = target.extmark_id
@@ -131,25 +131,8 @@ local hops = function()
 end
 return {
   { -- TODO: move from hop to leap
-    "phaazon/hop.nvim",
-    dependencies = { "IndianBoy42/hop-extensions" },
-    event = "VeryLazy",
-    opts = {
-      keys = O.hint_labels,
-    },
-    keys = function()
-      local hop_pattern = {
-        "<M-h>", -- "<M-CR>",
-        "<CR><CMD>lua require'hop'.hint_patterns({}, vim.fn.getreg('/'))<CR>",
-        mode = { "c" },
-      }
-      local keys = { hop_pattern }
-      for _, rhs_ in ipairs(hops()) do
-        local lhs, rhs, desc = unpack(rhs_)
-        table.insert(keys, { "<leader>h" .. lhs, rhs, desc = desc, mode = { "n", "x", "o" } })
-      end
-      return keys
-    end,
+    "IndianBoy42/hop-extensions",
+    dependencies = { "phaazon/hop.nvim" },
   },
   {
     "ggandor/leap.nvim",
