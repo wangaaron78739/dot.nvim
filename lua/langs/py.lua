@@ -9,22 +9,22 @@ return {
   --     })
   --   end,
   -- },
-  {
-    "lkhphuc/jupyter-kernel.nvim",
-    init = function()
-      vim.api.nvim_create_autocmd("Filetype", {
-        pattern = "python",
-        callback = function()
-          require("langs.complete").add_sources { { name = "jupyter" } }
-          vim.keymap.set("n", "gh", "<cmd>JupyterInspect<cr>", { buffer = 0 })
-        end,
-        group = vim.api.nvim_create_augroup("jupyter_kernel_setup", {}),
-      })
-    end,
-    cmd = { "JupyterAttach", "JupyterInspect", "JupyterExecute" },
-    build = ":UpdateRemotePlugins",
-    opts = {},
-  },
+  -- {
+  --   "lkhphuc/jupyter-kernel.nvim",
+  --   init = function()
+  --     vim.api.nvim_create_autocmd("Filetype", {
+  --       pattern = "python",
+  --       callback = function()
+  --         require("langs.complete").add_sources { { name = "jupyter" } }
+  --         vim.keymap.set("n", "gh", "<cmd>JupyterInspect<cr>", { buffer = 0 })
+  --       end,
+  --       group = vim.api.nvim_create_augroup("jupyter_kernel_setup", {}),
+  --     })
+  --   end,
+  --   cmd = { "JupyterAttach", "JupyterInspect", "JupyterExecute" },
+  --   build = ":UpdateRemotePlugins",
+  --   opts = {},
+  -- },
 
   require("langs").mason_ensure_installed { "python-lsp-server" },
   {

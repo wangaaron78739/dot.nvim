@@ -96,7 +96,14 @@ local M = {
         fast_wrap = {},
       }
 
-      require("nvim-treesitter.configs").setup { autopairs = { enable = true } }
+      -- require("nvim-treesitter.configs").setup {
+      --   ensure_installed = { "c", "lua", "vim", "vimdoc", "query" },
+      --   sync_install = false,
+      --   auto_install = false,
+      --   ignore_install = {},
+      --   modules = {},
+      --   -- autopairs = { enable = true }
+      -- }
 
       local ts_conds = require "nvim-autopairs.ts-conds"
 

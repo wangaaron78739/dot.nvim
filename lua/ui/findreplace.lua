@@ -31,7 +31,7 @@ return {
       end
 
       return {
-        { "r", substitute "operator", mode = "n", desc = "Replace" },
+        -- { "r", substitute "operator", mode = "n", desc = "Replace" },
         {
           "rr",
           substitute "line",
@@ -44,7 +44,7 @@ return {
           mode = "n",
           desc = "Replace EOL",
         },
-        { "r", substitute("visual", { yank_substituted_text = true }), mode = "x", desc = "Replace" },
+        -- { "r", substitute("visual", { yank_substituted_text = true }), mode = "x", desc = "Replace" },
         {
           "<leader>c",
           substitute_range "operator",

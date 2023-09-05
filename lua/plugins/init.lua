@@ -123,7 +123,7 @@ return {
     "EtiamNullam/deferred-clipboard.nvim",
     event = { "BufReadPost", "BufNewFile" },
     opts = {
-      lazy = true,
+      -- lazy = true,
       fallback = O.clipboard,
     },
   },

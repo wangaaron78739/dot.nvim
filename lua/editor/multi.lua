@@ -5,8 +5,8 @@ return {
     local ldr = "\\"
     vim.g.VM_leader = ldr
     vim.g.VM_maps = {
-      ["Find Under"] = "<M-n>",
-      ["Find Next"] = "<M-n>",
+      ["Find Under"] = "<C-S-d>",
+      ["Find Next"] = "<C-S-d>",
       ["Find Prev"] = "<M-S-n>",
       ["Find Subword Under"] = "<M-n>",
       ["Add Cursor Down"] = "<M-j>",

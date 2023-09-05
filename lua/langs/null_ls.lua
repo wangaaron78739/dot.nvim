@@ -46,7 +46,7 @@ return {
         formatters.prettierd,
         -- formatters.rustfmt,
         formatters.shfmt,
-        -- formatters.black, -- yapf, autopep8
+        formatters.black, -- yapf, autopep8
         -- formatters.isort,
         -- formatters.clang_format,
         -- formatters.uncrustify,
@@ -74,7 +74,7 @@ return {
         -- -- diagnostics.misspell,
         diagnostics.markdownlint,
         diagnostics.yamllint,
-        diagnostics.gccdiag,
+        -- diagnostics.gccdiag,
 
         -- Code Actions
         -- code_actions.gitsigns, -- TODO: reenable when I can lower the priority

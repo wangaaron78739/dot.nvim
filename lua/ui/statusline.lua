@@ -40,11 +40,15 @@ local M = {
     },
     "marko-cerovac/material.nvim",
     {
-      "roobert/statusline-action-hints.nvim",
+      "roobert/action-hints.nvim",
       config = function()
-        require("statusline-action-hints").setup {
+        require("action-hints").setup {
           definition_identifier = "gd",
-          template = "%s ref:%s",
+          template = {
+            definition = { text = " ⊛", color = "#add8e6" },
+            references = { text = " ↱%s", color = "#ff6666" },
+          },
+          use_virtual_text = true,
         }
       end,
     },
@@ -138,6 +142,7 @@ M.config = function()
   require("lualine").setup {
     options = {
       icons_enabled = true,
+      theme = "onedark",
       -- theme = O.theme,
       -- theme = "molokai",
       -- theme = "catppuccino",

@@ -2,6 +2,7 @@ local M = {
   "nvim-tree/nvim-tree.lua",
   cmd = { "NvimTreeOpen", "NvimTreeFocus", "NvimTreeToggle" },
   dependencies = {
+    { "antosha417/nvim-lsp-file-operations", opts = {} },
     "nvim-tree/nvim-web-devicons",
   },
 }
@@ -31,7 +32,7 @@ local function on_attach(bufnr)
     ["f"] = { api.live_filter.start, "Filter" },
     ["S"] = { api.tree.search_node, "Search" },
     ["L"] = { api.tree.expand_all, "Expand All" },
-    ["H"] = { api.tree.collapse_all, "Collapse All" },
+    ["hh"] = { api.tree.collapse_all, "Collapse All" },
     ["J"] = { "<Nop>", "Nop" },
     ["K"] = { api.node.navigate.parent, "Parent Directory" },
     ["w"] = { api.node.navigate.sibling.next, "Next Sibling" },
@@ -41,14 +42,13 @@ local function on_attach(bufnr)
     ["A"] = { "<Nop>", "Nop" },
     ["i"] = { "<Nop>", "Nop" },
     ["I"] = { "<Nop>", "Nop" },
-    ["o"] = { "<Nop>", "Nop" },
+    ["o"] = { api.fs.create, "Nop" },
     ["O"] = { "<Nop>", "Nop" },
 
-    ["<CR>"] = { api.node.open.edit, "Open" },
-    ["l"] = { api.node.open.no_window_picker, "Open" },
+    ["<CR>"] = { api.node.open.no_window_picker, "Open" },
+    ["l"] = { api.node.open.edit, "Open" },
     ["<Tab>"] = { api.node.open.preview, "Open Preview" },
     ["h"] = { api.node.navigate.parent_close, "Close Directory" },
-    ["<BS>"] = { api.node.navigate.parent_close, "Close Directory" },
 
     ["<localleader>P"] = { api.marks.bulk.move, "Move Bookmarked" },
     ["m"] = { api.marks.toggle, "Toggle Bookmark" },
@@ -58,7 +58,7 @@ local function on_attach(bufnr)
     ["."] = { api.node.run.cmd, "Run Command" },
     ["<C-CR>"] = { api.node.run.system, "Run System" },
 
-    ["gh"] = { api.node.show_info_popup, "Info" },
+    ["H"] = { api.node.show_info_popup, "Info" },
     ["<localleader>r"] = { api.fs.rename_sub, "Rename: Omit Filename" },
     ["<localleader>e"] = { api.node.open.replace_tree_buffer, "Open: In Place" },
     ["<localleader>t"] = { api.node.open.tab, "Open: New Tab" },
@@ -87,6 +87,14 @@ local function on_attach(bufnr)
     ["<localleader>R"] = { api.tree.change_root_to_parent, "Change root to parent" },
 
     ["?"] = { api.tree.toggle_help, "Help" },
+    ["<C-l>"] = { api.tree.close, "Help" },
+    ["<C-h>"] = {
+      function()
+        api.tree.close()
+        vim.cmd.vsplit()
+      end,
+      "Help",
+    },
   }
 
   local map = function(l, r, d, ll)
@@ -111,9 +119,20 @@ M.opts = {
   diagnostics = {
     enable = true,
   },
+  actions = {
+    open_file = {
+      window_picker = {
+        picker = function() return require("ui.win_pick").pick_or_create() end,
+      },
+      quit_on_open = true,
+    },
+  },
   -- renderer = { icons = { glyphs = require("circles").get_nvimtree_glyphs() } },
 }
 M.config = function(_, opts)
+  -- This is to work around some jank in remember-me.nvim
+  vim.g.NvimTreeSetup = 0
+  vim.g.NvimTreeRequired = 0
   require("nvim-tree").setup(opts)
   vim.api.nvim_create_autocmd("VimLeavePre", {
     callback = function() vim.cmd.NvimTreeClose() end,

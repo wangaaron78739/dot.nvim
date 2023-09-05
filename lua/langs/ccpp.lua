@@ -36,6 +36,13 @@ return {
       servers = {
         clangd = {
           -- cmd = require("lsp.config").get_cmd "clangd",
+          cmd = {
+            "clangd",
+            "--background-index",
+            "--query-driver=**/arm-none-eabi-*,**/x86_64-linux-*",
+            "--cross-file-rename",
+          },
+
           -- cmd_env = require("lsp.config").get_cmd_env "clangd",
 
           extra_cmd_args = clangd_flags,
@@ -63,41 +70,42 @@ return {
           end)(),
         },
       },
-      setup = {
-        clangd = function(_, opts)
-          local inlay_hints = require("langs").inlay_hints
-          local inlay_hints_enabled = inlay_hints.auto or inlay_hints.by_tools
-          require("clangd_extensions").setup {
-            server = opts,
-            extensions = {
-              autoSetHints = inlay_hints_enabled,
-              inlay_hints = inlay_hints,
-              ast = {
-                --These require codicons (https://github.com/microsoft/vscode-codicons)
-                role_icons = {
-                  type = "",
-                  declaration = "",
-                  expression = "",
-                  specifier = "",
-                  statement = "",
-                  ["template argument"] = "",
-                },
-
-                kind_icons = {
-                  Compound = "",
-                  Recovery = "",
-                  TranslationUnit = "",
-                  PackExpansion = "",
-                  TemplateTypeParm = "",
-                  TemplateTemplateParm = "",
-                  TemplateParamObject = "",
-                },
-              },
-            },
-          }
-          return true
-        end,
-      },
+      -- setup = {
+      --   clangd = function(_, opts)
+      --     require("clangd_extensions").setup {
+      --       server = opts,
+      --       extensions = {
+      --         autoSetHints = false,
+      --         inlay_hints = false,
+      --         ast = {
+      --           --These require codicons (https://github.com/microsoft/vscode-codicons)
+      --           role_icons = {
+      --             type = "",
+      --             declaration = "",
+      --             expression = "",
+      --             specifier = "",
+      --             statement = "",
+      --             ["template argument"] = "",
+      --           },
+      --
+      --           kind_icons = {
+      --             Compound = "",
+      --             Recovery = "",
+      --             TranslationUnit = "",
+      --             PackExpansion = "",
+      --             TemplateTypeParm = "",
+      --             TemplateTemplateParm = "",
+      --             TemplateParamObject = "",
+      --           },
+      --         },
+      --       },
+      --     }
+      --     return true
+      --   end,
+      -- },
     },
   },
+  -- TODO: {"Civitasv/cmake-tools.nvim"}
+  -- TODO: https://github.com/Badhi/nvim-treesitter-cpp-tools
+  -- https://github.com/roobert/hoversplit.nvim
 }

@@ -205,6 +205,7 @@ return {
   },
   {
     "cbochs/portal.nvim",
+    enabled = false,
     dependencies = {
       -- "cbochs/grapple.nvim", -- Optional: provides the "grapple" query item
       -- "ThePrimeagen/harpoon", -- Optional: provides the "harpoon" query item

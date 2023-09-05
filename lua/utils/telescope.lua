@@ -7,9 +7,29 @@ function M.set_prompt_to_entry_value(prompt_bufnr)
   require("telescope.actions.state").get_current_picker(prompt_bufnr):reset_prompt(entry.ordinal)
 end
 
+M.from_qf_items = function(items, opts)
+  local opts = opts or {}
+  local conf = require("telescope.config").values
+  require("telescope.pickers")
+    .new(opts, {
+      prompt_title = "LSP References",
+      finder = require("telescope.finders").new_table {
+        results = items,
+        entry_maker = opts.entry_maker or require("telescope.make_entry").gen_from_quickfix(opts),
+      },
+      previewer = conf.qflist_previewer(opts),
+      sorter = conf.generic_sorter(opts),
+      push_cursor_on_edit = true,
+      push_tagstack_on_edit = true,
+    })
+    :find()
+end
+
+M.from_lsp_locations = function(items, opts, ctx) M.from_qf_items(vim.lsp.util.locations_to_items(result, oe), opts) end
+
 M.smart_open = function()
   require("telescope").extensions.smart_open.smart_open {
-    cwd_only = true,
+    -- cwd_only = true,
   }
 end
 
@@ -217,25 +237,12 @@ function M.grep_prompt()
   }
 end
 
-function M.grep_visual()
-  require("telescope.builtin").grep_string {
-    path_display = { "shorten_path" },
-    search = utils.get_visual_selection(),
-  }
-end
-
-function M.grep_cWORD()
-  require("telescope.builtin").grep_string {
-    path_display = { "shorten_path" },
-    search = vim.fn.expand "<cWORD>",
-  }
-end
-
 function M.grep_last_search(opts)
   opts = opts or {}
 
   -- \<getreg\>\C
   -- -> Subs out the search things
+  -- TODO: properly escape this
   local register = vim.fn.getreg("/"):gsub("\\<", ""):gsub("\\>", ""):gsub("\\C", "")
 
   opts.path_display = { "shorten_path" }
@@ -292,9 +299,13 @@ function M.with_rg(opts)
 end
 
 function M.live_grep_all()
-  require("telescope.builtin").find_files {
+  require("telescope.builtin").live_grep {
     find_command = M.with_rg {},
   }
+end
+function M.live_grep()
+  -- require("telescope.builtin").live_grep ()
+  require("telescope").extensions.live_grep_args.live_grep_args()
 end
 
 function M.find_all_files()
@@ -344,6 +355,10 @@ function M.uiselect(picker_opts, sorter_opts)
       })
       :find()
   end
+end
+vim.ui.select = function(...)
+  vim.ui.select = require("utils.telescope").uiselect()
+  return vim.ui.select(...)
 end
 
 function M.file_browser()
@@ -456,15 +471,60 @@ function M.side_split_theme(opts)
   return vim.tbl_deep_extend("force", theme_opts, opts)
 end
 
+function M.select_pick_window(prompt_bufnr)
+  -- Use nvim-window-picker to choose the window by dynamically attaching a function
+  local action_set = require "telescope.actions.set"
+  local action_state = require "telescope.actions.state"
+
+  local picker = action_state.get_current_picker(prompt_bufnr)
+  picker.get_selection_window = function(picker, entry)
+    local fallback = vim.api.nvim_get_current_win
+    local picked_window_id = require("ui.win_pick").pick_or_create() or fallback()
+    -- Unbind after using so next instance of the picker acts normally
+    picker.get_selection_window = nil
+    return picked_window_id
+  end
+
+  return action_set.edit(prompt_bufnr, "edit")
+end
+
+function M.flash(prompt_bufnr)
+  require("flash").jump {
+    pattern = "^",
+    highlight = { label = { after = { 0, 0 } } },
+    search = {
+      mode = "search",
+      exclude = {
+        function(win) return vim.bo[vim.api.nvim_win_get_buf(win)].filetype ~= "TelescopeResults" end,
+      },
+    },
+    action = function(match)
+      local picker = require("telescope.actions.state").get_current_picker(prompt_bufnr)
+      picker:set_selection(match.pos[1] - 1)
+    end,
+  }
+end
+
 return setmetatable(M, {
   __index = function(_, k)
     -- reloader()
 
-    local builtin = require("telescope.builtin")[k]
-    if builtin then
-      return builtin
-    else
-      return require("telescope").extensions[k]
-    end
+    --     return function (...)
+    --
+    -- local builtin = require("telescope.builtin")[k]
+    -- if builtin then
+    --   return builtin(...)
+    -- else
+    --   return require("telescope").extensions[k](...)
+    -- end
+    --     end
+
+    return function(...) return require("telescope.builtin")[k](...) end
+    -- local builtin = require("telescope.builtin")[k]
+    -- if builtin then
+    --   return builtin
+    -- else
+    --   return require("telescope").extensions[k]
+    -- end
   end,
 })

@@ -129,9 +129,9 @@ return {
     main = "mini.comment",
     opts = {
       mappings = {
-        comment = "<c-c>",
-        comment_line = "<c-c><c-c>",
-        textobject = "<c-c>",
+        comment = "gc",
+        comment_line = "gcc",
+        textobject = "gc",
       },
 
       -- Hook functions to be executed at certain stage of commenting

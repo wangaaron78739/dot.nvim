@@ -24,9 +24,9 @@ local telescope = {
     { "nvim-telescope/telescope-frecency.nvim", dependencies = {
       "kkharji/sqlite.lua",
     } },
-    "nvim-telescope/telescope-hop.nvim",
     "nvim-telescope/telescope-media-files.nvim",
     "nvim-telescope/telescope-github.nvim",
+    "nvim-telescope/telescope-live-grep-args.nvim",
     {
       "nvim-telescope/telescope-fzf-native.nvim",
       -- NOTE: If you are having trouble with this installation,
@@ -36,6 +36,7 @@ local telescope = {
     },
     "LukasPietzschmann/telescope-tabs",
     "benfowler/telescope-luasnip.nvim",
+    "debugloop/telescope-undo.nvim",
   },
   cmd = "Telescope",
   config = function()
@@ -106,7 +107,6 @@ local telescope = {
             -- ["<M-p>"] = action_layout.toggle_preview,
             ["<Esc>"] = actions.close,
 
-            ["<C-h>"] = telescope.extensions.hop.hop,
             ["<C-x>"] = actions.delete_buffer,
             ["<C-s>"] = actions.select_horizontal,
             ["<C-v>"] = actions.select_vertical,
@@ -171,11 +171,12 @@ local telescope = {
 
     -- telescope.setup {}
     -- telescope.load_extension('fzy_native')
+    telescope.load_extension "noice"
     telescope.load_extension "fzf"
-    telescope.load_extension "hop"
     telescope.load_extension "smart_open"
     telescope.load_extension "frecency"
     telescope.load_extension "luasnip"
+    telescope.load_extension "live_grep_args"
     -- telescope.load_extension('project')
   end,
 }
